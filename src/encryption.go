@@ -1,18 +1,19 @@
-package src
+package main
 
 import (
-	"fmt"
-	"io"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
+	"io"
 )
 
-func genKey(size uint8) ([]byte, error) {
+func generateKey(size uint8) ([]byte, error) {
 	key := make([]byte, size)
 
-	_, err := rand.Read(key); if err != nil {
+	_, err := rand.Read(key)
+	if err != nil {
 		return nil, err
 	}
 
@@ -21,7 +22,8 @@ func genKey(size uint8) ([]byte, error) {
 
 func encryptZup(zupFile Zup, key []byte) (string, error) {
 	zupData := []byte(string(zupFile.String()))
-	block, err := aes.NewCipher(zupData); if err != nil {
+	block, err := aes.NewCipher(zupData)
+	if err != nil {
 		return "", err
 	}
 
@@ -40,11 +42,13 @@ func encryptZup(zupFile Zup, key []byte) (string, error) {
 }
 
 func decryptZup(zupCipher string, key []byte) (Zup, error) {
-	ciphertext, err := base64.StdEncoding.DecodeString(zupCipher); if err != nil {
+	ciphertext, err := base64.StdEncoding.DecodeString(zupCipher)
+	if err != nil {
 		return Zup{}, err
 	}
 
-	block, err := aes.NewCipher(key); if err != nil {
+	block, err := aes.NewCipher(key)
+	if err != nil {
 		return Zup{}, err
 	}
 

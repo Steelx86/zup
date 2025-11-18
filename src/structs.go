@@ -1,4 +1,4 @@
-package src
+package main
 
 import ()
 
@@ -14,7 +14,7 @@ type Zup struct {
 
 type Journal struct {
 	entries []JournalEntry
-	count   uint16
+	count   int
 }
 
 type JournalEntry struct {
@@ -28,7 +28,6 @@ type JournalEntry struct {
 /* Planner Portion */
 
 type Planner struct {
-
 }
 
 type TaskList struct {

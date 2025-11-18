@@ -1,8 +1,7 @@
-package src
+package main
 
 import (
 	"time"
-	"strconv"
 	// "crypto/aes"
 )
 
