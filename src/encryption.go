@@ -1,11 +1,12 @@
 package src
 
 import (
+	"fmt"
+	"io"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"io"
 )
 
 func genKey(size uint8) ([]byte, error) {
@@ -33,15 +34,31 @@ func encryptZup(zupFile Zup, key []byte) (string, error) {
 
 	// Data encryption
 	encrypter := cipher.NewCBCEncrypter(block, iv)
-	encrypter.XORKeyStream(ciphertext[aes.BlockSize:], zupData)
+	encrypter.CryptBlocks(ciphertext[aes.BlockSize:], zupData)
 
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
 func decryptZup(zupCipher string, key []byte) (Zup, error) {
 	ciphertext, err := base64.StdEncoding.DecodeString(zupCipher); if err != nil {
-		return Zup, err
+		return Zup{}, err
 	}
 
+	block, err := aes.NewCipher(key); if err != nil {
+		return Zup{}, err
+	}
 
+	if len(ciphertext) < aes.BlockSize {
+		return Zup{}, fmt.Errorf("ciphertext is too short")
+	}
+
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+
+	decrypter := cipher.NewCBCDecrypter(block, iv)
+	decrypter.CryptBlocks(ciphertext, ciphertext)
+
+	zupFile := readZupString(string(ciphertext))
+
+	return zupFile, nil
 }
