@@ -1,9 +1,8 @@
-package main
+package src
 
 import (
 	"fmt"
 	"os"
-	"crypto/rand"
 )
 
 func main() {
@@ -16,14 +15,4 @@ func main() {
 		default: fmt.Println(helpMsg)
 	}
 
-}
-
-func genKey() ([]byte, error) {
-	key := make([]byte, 32)
-
-	_, err := rand.Read(key); if err != nil {
-		return nil, err
-	}
-
-	return key, err
 }

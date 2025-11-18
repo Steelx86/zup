@@ -1,8 +1,10 @@
-package main
+package src
 
 import ()
 
-type ZUP struct {
+/* Zup data representation */
+
+type Zup struct {
 	name    string
 	journal Journal
 	planner Planner
@@ -16,7 +18,7 @@ type Journal struct {
 }
 
 type JournalEntry struct {
-	id       uint16
+	id       int
 	time     string
 	date     string
 	location string
@@ -30,7 +32,7 @@ type Planner struct {
 }
 
 type TaskList struct {
-	id        uint16
+	id        int
 	name      string
 	tasks     []Task
 	time      string
@@ -39,7 +41,7 @@ type TaskList struct {
 }
 
 type Task struct {
-	id   uint16
+	id   int
 	name string
 	done bool
 }

@@ -1,8 +1,8 @@
-package main
+package src
 
 import (
 	"time"
-	"os"
+	"strconv"
 	// "crypto/aes"
 )
 
@@ -11,14 +11,6 @@ func createJournal() Journal {
 		entries: nil,
 		count: 0,
 	}
-}
-
-func loadJournal(file *os.File) Journal {
-	return Journal {}
-}
-
-func writeJournal(file *os.File) string {
-	return ""
 }
 
 func (j *Journal) newEntry(location string, content string) {

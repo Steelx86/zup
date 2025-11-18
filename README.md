@@ -1,6 +1,6 @@
 # Zup
 
-A specialized file format that 
+[INSERT DESCRIPTION HERE!]
 
 ## Current Functionalities
 
