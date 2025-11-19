@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-func generateKey(size uint8) ([]byte, error) {
+func generateKey(size int) ([]byte, error) {
 	key := make([]byte, size)
 
 	_, err := rand.Read(key)

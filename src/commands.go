@@ -1,14 +1,49 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 	"strings"
-	"encoding/hex"
 )
 
-func openZup(name string ) {
-	// placeholder
+func commandHandler(command string) {
+	switch command {
+	case "open":
+		openZup(os.Args[2])
+	case "new":
+		newZup(os.Args[2])
+	case "help":
+		fmt.Println(helpMsg)
+	case "generate":
+		generateZupKey()
+	case "sync": // sync with host
+		return // place holder
+	case "host": // open port for hosting
+		return
+	default:
+		fmt.Printf("Unknown command: %s\n", command)
+		fmt.Println(helpMsg)
+	}
+}
+
+func REPL() {
+	fmt.Print("Welcome to Zup alpha!\n Type '.help' for more information\n")
+
+	var input string
+
+	for input != ".exit" {
+		fmt.Print("zup> ")
+		fmt.Scanln(&input)
+	}
+}
+
+func openZup(name string) {
+	file, err := os.ReadFile(name)
+	if err != nil {
+		fmt.Printf("Error opening file: %v\n", err)
+		return
+	}
 }
 
 func newZup(name string) {
@@ -18,7 +53,7 @@ func newZup(name string) {
 		os.Create(name + ".zup")
 	}
 
-	key, err:= generateKey(KEY_SIZE)
+	key, err := generateKey(KEY_SIZE)
 	if err != nil {
 		fmt.Printf("Key generation error: %v\n", err)
 	}
@@ -39,3 +74,5 @@ func generateZupKey() {
 
 	fmt.Printf("Generated key: %s\n", readableKey)
 }
+
+
