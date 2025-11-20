@@ -9,7 +9,8 @@ import (
 
 type Zup struct {
 	Name        string
-	Web_address *url.URL
+	Generation  int 
+	WebAddress *url.URL
 	Journal     Journal
 }
 

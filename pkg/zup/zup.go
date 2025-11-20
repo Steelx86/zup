@@ -38,14 +38,13 @@ func OpenZup(name string) {
 	}
 }
 */
-func GenerateZupKey() {
+func GenerateZupKey() (string, error) {
 	key, err := encryption.GenerateKey(KEY_SIZE)
 	if err != nil {
-		fmt.Printf("Key generation error: %v\n", err)
-		return
+		return "", err
 	}
 
 	readableKey := hex.EncodeToString(key)
 
-	fmt.Printf("Generated key: %s\n", readableKey)
+	return readableKey, nil
 }
