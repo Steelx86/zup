@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrInvalidKeySize      = errors.New("Invalid key size inputted")
-	ErrShortCipher         = errors.New("Ciphertext is too short")
+	ErrInvalidKeySize = errors.New("invalid key size inputted")
+	ErrShortCipher    = errors.New("ciphertext is too short")
 )
 
 func generateKey(size int) ([]byte, error) {
@@ -30,8 +30,8 @@ func generateKey(size int) ([]byte, error) {
 	return key, nil
 }
 
-func encryptZup(zupFile Zup, key []byte) (string, error) {
-	zupData := []byte(zupFile.String())
+func encryptZup(content string, key []byte) (string, error) {
+	zupData := []byte(content)
 
 	block, err := aes.NewCipher(zupData)
 	if err != nil {
@@ -54,33 +54,33 @@ func encryptZup(zupFile Zup, key []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
-func decryptZup(zupCipher string, key []byte) (Zup, error) {
-	ciphertext, err := base64.StdEncoding.DecodeString(zupCipher)
+func decryptZup(encryptedText string, key []byte) (string, error) {
+	ciphertext, err := base64.StdEncoding.DecodeString(encryptedText)
 	if err != nil {
-		return Zup{}, fmt.Errorf("failed to decode: %v", err)
+		return "", fmt.Errorf("failed to decode: %v", err)
 	}
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return Zup{}, fmt.Errorf("failed to create cipher: %v", err)
+		return "", fmt.Errorf("failed to create cipher: %v", err)
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		return Zup{}, fmt.Errorf("failed to create GCM: %v", err)
+		return "", fmt.Errorf("failed to create GCM: %v", err)
 	}
 
 	nonceSize := aesGCM.NonceSize()
 	if len(ciphertext) < nonceSize {
-		return Zup{}, ErrShortCipher
+		return "", ErrShortCipher
 	}
 	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
 
 	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return Zup{}, fmt.Errorf("failed ot decrypt data: %v", err)
+		return "", fmt.Errorf("failed ot decrypt data: %v", err)
 	}
 
-	zupFile := readZupString(string(plaintext))
-	return zupFile, nil
+	content := string(plaintext)
+	return content, nil
 }

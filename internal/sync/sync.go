@@ -3,7 +3,6 @@ package sync
 import (
 	"crypto/tls"
 	"fmt"
-	"io"
 	"log"
 	"net"
 )

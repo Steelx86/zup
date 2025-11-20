@@ -1,4 +1,4 @@
-package ops
+package zup
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"encoding/hex"
 
-	"zup/internal/models"
+	"github.com/dlambda/zup/internal/encryption"
 )
 
 const (

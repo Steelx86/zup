@@ -13,5 +13,7 @@ func readZupString(zupString string) Zup {
 }
 
 func (z *Zup) String() string {
+	for 
+
 	return fmt.Sprintf("%v", z)
 }

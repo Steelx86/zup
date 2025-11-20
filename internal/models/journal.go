@@ -2,7 +2,6 @@ package models
 
 import (
 	"time"
-	// "crypto/aes"
 )
 
 func createJournal() Journal {

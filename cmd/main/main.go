@@ -1,12 +1,10 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"os"
-	"strings"
 
-	"github.com/dlambda/zup/pkg/ops"
+	"github.com/dlambda/zup/pkg/zup"
 )
 
 const (
@@ -19,11 +17,11 @@ func main() {
 
 	switch command {
 	case "-n":
-		newZup(os.Args[2])
+		zup.newZup(os.Args[2])
 	case "-h":
 		fmt.Println(helpMsg)
 	case "-g":
-		generateZupKey()
+		zup.generateZupKey()
 	case "-s": // sync with host
 		return 
 	case "-f": // forward port for hosting
