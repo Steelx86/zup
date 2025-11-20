@@ -1,26 +1,27 @@
 package models
 
-import ()
+import (
+	"net/url"
+	"time"
+)
 
 /* Zup data representation */
 
 type Zup struct {
-	name    string
-	journal Journal
+	Name        string
+	Web_address *url.URL
+	Journal     Journal
 }
 
 /* Journal Portion */
 
 type Journal struct {
-	entries []JournalEntry
-	count   int
+	Entries []JournalEntry
+	Count   int
 }
 
 type JournalEntry struct {
-	id       int
-	time     string
-	date     string
-	location string
-	content  string
+	ID       int
+	Time     time.Time
+	Content  string
 }
-

@@ -1,26 +1,47 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
-func createJournal() Journal {
+func CreateJournal() Journal {
 	return Journal{
-		entries: nil,
-		count: 0,
+		Entries: nil,
+		Count:   0,
 	}
 }
 
-func (j *Journal) newEntry(location string, content string) {
-	now := time.Now()
-	j.count += 1
-	j.entries = append(j.entries, JournalEntry{
-		id:       j.count,
-		time:     now.Format("15:04:05"),
-		date:     now.Format("2025-01-02"),
-		location: location,
-		content:  content,
+func (j *Journal) NewEntry(location string, content string) {
+	j.Entries = append(j.Entries, JournalEntry{
+		ID:      j.Count,
+		Time:    time.Now(),
+		Content: content,
 	})
+
+	j.Count += 1
 }
 
+func (j *Journal) String() string {
+	var journalEntries string
+	for _, entry := range j.Entries {
+		journalEntries += entry.String()
+	}
 
+	return journalEntries
+}
+
+func (j *Journal) GetEntry(id int) string {
+	return j.Entries[id].String()
+}
+
+func (je *JournalEntry) String() string {
+	return fmt.Sprintf(
+		`{
+			ID: %d
+			Time: %s
+			Entry: 
+			%s
+		}`,
+		je.ID, je.Time, je.Content)
+}
