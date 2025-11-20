@@ -8,25 +8,40 @@ import (
 )
 
 const (
-	helpMsg  = `Usage: zup [FILE] [KEY] 
-Try 'zup help' for more information\n`
+	helpMsg  = 
+`zup: zup [-OPTION]
+Options:
+  -n <name>     Initilize a .zup file
+  -r <key>      Read zup file
+  -w <text>     Writes a new entry
+  -g            Generates a hash key
+  -s            Host a zupfile
+  -f            Fetch a zupfile from host
+  -h            Displays a help message
+`
 )
 
 func main() {
+	if len(os.Args) < 2 {
+		fmt.Print(helpMsg)
+		return
+	}
+
 	command := os.Args[1]
 
 	switch command {
 	case "-n":
-		zup.newZup(os.Args[2])
-	case "-h":
-		fmt.Println(helpMsg)
+		zup.NewZup(os.Args[2])
+	
 	case "-g":
-		zup.generateZupKey()
-	case "-s": // sync with host
+		zup.GenerateZupKey()
+	case "-s":
 		return 
-	case "-f": // forward port for hosting
+	case "-f":
 		return
+	case "-h":
+		fmt.Print(helpMsg)
 	default:
-		fmt.Println(helpMsg)
+		fmt.Print(helpMsg)
 	}
 }

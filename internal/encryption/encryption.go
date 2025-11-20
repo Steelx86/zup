@@ -15,7 +15,7 @@ var (
 	ErrShortCipher    = errors.New("ciphertext is too short")
 )
 
-func generateKey(size int) ([]byte, error) {
+func GenerateKey(size int) ([]byte, error) {
 	if size != 16 && size != 24 && size != 32 {
 		return nil, ErrInvalidKeySize
 	}
@@ -30,7 +30,7 @@ func generateKey(size int) ([]byte, error) {
 	return key, nil
 }
 
-func encryptZup(content string, key []byte) (string, error) {
+func Encrypt(content string, key []byte) (string, error) {
 	zupData := []byte(content)
 
 	block, err := aes.NewCipher(zupData)
@@ -54,7 +54,7 @@ func encryptZup(content string, key []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
-func decryptZup(encryptedText string, key []byte) (string, error) {
+func Decrypt(encryptedText string, key []byte) (string, error) {
 	ciphertext, err := base64.StdEncoding.DecodeString(encryptedText)
 	if err != nil {
 		return "", fmt.Errorf("failed to decode: %v", err)
