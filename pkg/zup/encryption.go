@@ -1,4 +1,4 @@
-package internal
+package zup
 
 import (
 	"crypto/aes"
@@ -30,10 +30,10 @@ func GenerateKey(size int) ([]byte, error) {
 	return key, nil
 }
 
-func Encrypt(content string, key []byte) (string, error) {
+func encrypt(content string, key *[]byte) (string, error) {
 	zupData := []byte(content)
 
-	block, err := aes.NewCipher(zupData)
+	block, err := aes.NewCipher(*key)
 	if err != nil {
 		return "", fmt.Errorf("failed to create cipher: %v", err)
 	}
@@ -54,13 +54,13 @@ func Encrypt(content string, key []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
-func Decrypt(encryptedText string, key []byte) (string, error) {
+func decrypt(encryptedText string, key *[]byte) (string, error) {
 	ciphertext, err := base64.StdEncoding.DecodeString(encryptedText)
 	if err != nil {
 		return "", fmt.Errorf("failed to decode: %v", err)
 	}
 
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(*key)
 	if err != nil {
 		return "", fmt.Errorf("failed to create cipher: %v", err)
 	}

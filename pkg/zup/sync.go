@@ -1,4 +1,4 @@
-package internal
+package zup
 
 import (
 	"crypto/tls"

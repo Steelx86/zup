@@ -3,6 +3,8 @@ package tests
 import (
 	"os"
 	"testing"
+
+	"github.com/dlambda/zup/pkg/zup"
 )
 
 func testWrite(t *testing.T) {

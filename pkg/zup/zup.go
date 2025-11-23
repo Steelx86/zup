@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/dlambda/zup/internal"
 )
 
 const (
@@ -21,7 +19,7 @@ func InitZup(name string) (string, error) {
 		os.Create(name + ".zup")
 	}
 
-	key, err := internal.GenerateKey(KEY_SIZE)
+	key, err := GenerateKey(KEY_SIZE)
 	if err != nil {
 		return "", err
 	}
@@ -31,42 +29,42 @@ func InitZup(name string) (string, error) {
 	return readableKey, nil
 }
 
-func OpenZup(fileName string, key string) (internal.Zup, error) {
+func OpenZup(fileName string, key string) (Zup, error) {
 	file, err := os.ReadFile(fileName)
 	if err != nil {
-		return internal.Zup{}, err
+		return Zup{}, err
 	}
 
 	encryptedContent := string(file)
-	content, err := internal.Decrypt(encryptedContent, []byte(key))
+	content, err := decrypt(encryptedContent, []byte(key))
 	if err != nil {
-		return internal.Zup{}, err
+		return Zup{}, err
 	}
 
 	zupData, err := ParseZupString(content)
 	if err != nil {
-		return internal.Zup{}, err
+		return Zup{}, err
 	}
 
 	return zupData, nil
 }
 
-func ParseZupString(zupString string) (internal.Zup, error) {
-	var zup internal.Zup
+func ParseZupString(zupString string) (*Zup, error) {
+	var zup Zup
 	err := json.Unmarshal([]byte(zupString), &zup)
 	if err != nil {
-		return internal.Zup{}, fmt.Errorf("failed to parse Zup JSON: %v", err)
+		return &Zup{}, fmt.Errorf("failed to parse Zup JSON: %v", err)
 	}
-	return zup, nil
+	return &zup, nil
 }
 
-func WriteZup(fileName string, zup internal.Zup, key string) error {
+func WriteZup(fileName string, zup Zup, key string) error {
 	zupBytes, err := json.Marshal(zup)
 	if err != nil {
 		return err
 	}
 
-	encryptedContent, err := internal.Encrypt(string(zupBytes), []byte(key))
+	encryptedContent, err := encrypt(string(zupBytes), []byte(key))
 	if err != nil {
 		return err
 	}
@@ -79,12 +77,12 @@ func WriteZup(fileName string, zup internal.Zup, key string) error {
 	return nil
 }
 
-func AddFormatToZup(zup *internal.Zup, formatName string, fields []string) {
+func AddFormatToZup(zup Zup, formatName string, fields []string) {
 	zup.AddFormat(formatName, fields)
 }
 
 func GenerateZupKey() (string, error) {
-	key, err := internal.GenerateKey(KEY_SIZE)
+	key, err := GenerateKey(KEY_SIZE)
 	if err != nil {
 		return "", err
 	}

@@ -32,19 +32,38 @@ func main() {
 
 	switch commands[1] {
 	case "-n":
-		handleNewZup(commands)
+		if len(os.Args) < 3 {
+			fmt.Print("Please provide a name for the zup file.\n")
+			return
+		}
+
+		name := commands[2]
+
+		key, err := zup.InitZup(name)
+		if err != nil {
+			fmt.Printf("failed to initialize zup file: %v", err)
+			return
+		}
+
+		fmt.Printf("Initialized zup file. Key: %s\n", key)
 	case "-r":
-		handleReadFile(commands)
+		// unfinished
 	case "-d":
-		handleNewFormat(commands)
+		// unfinished
 	case "-w":
-		handleReadFile(commands)
+		// unfinished
 	case "-g":
-		handleGenerateKey()
+		key, err := zup.GenerateZupKey()
+		if err != nil {
+			fmt.Printf("failed to generate key: %v", err)
+			return
+		}
+
+		fmt.Printf("Generated key: %s", key)
 	case "-s":
-		handleHost() // unfinished
+		// unfinished
 	case "-p":
-		handlePull() // unfinished
+		// unfinished
 	case "-h":
 		fmt.Print(helpMsg)
 	default:
@@ -52,46 +71,3 @@ func main() {
 	}
 }
 
-func handleNewZup(name []string) {
-	if len(os.Args) < 3 {
-		fmt.Print("Please provide a name for the zup file.\n")
-		return
-	}
-
-	key, err := zup.InitZup(name[2])
-	if err != nil {
-		fmt.Printf("failed to initialize zup file: %v", err)
-		return
-	}
-
-	fmt.Printf("Initialized zup file. Key: %s\n", key)
-}
-
-func handleReadFile(name []string) {
-	if len(os.Args) < 3 {
-		fmt.Print("Please provide text to write to the zup file.\n")
-		return
-	}
-}
-
-func handleNewFormat(name []string) {
-
-}
-
-func handleGenerateKey() {
-	key, err := zup.GenerateZupKey()
-	if err != nil {
-		fmt.Printf("failed to generate key: %v", err)
-		return
-	}
-
-	fmt.Printf("Generated key: %s", key)
-}
-
-func handleHost() {
-
-}
-
-func handlePull() {
-
-}
