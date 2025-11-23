@@ -13,6 +13,7 @@ zup [-OPTION] <param?>
 Options:
   -n <name>     Initilize a .zup file
   -r <key>      Read zup file
+  -d            Declare data format
   -w <text>     Writes a new entry
   -g            Generates a hash key
   -s            Host a zupfile
