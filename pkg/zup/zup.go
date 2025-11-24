@@ -3,6 +3,7 @@ package zup
 import (
 	"encoding/json"
 	"encoding/hex"
+	"path/filepath"
 	"fmt"
 	"os"
 	"strings"
@@ -10,14 +11,29 @@ import (
 
 const (
 	KEY_SIZE = 32
+	ZUP_DIR = "./.zup"
 )
 
 func InitZup(name string) (string, error) {
-	if strings.HasSuffix(name, ".zup") {
-		os.Create(name)
-	} else {
-		os.Create(name + ".zup")
+	if err := os.MkdirAll(ZUP_DIR, os.ModePerm); err != nil {
+		return "", err
 	}
+
+	name = filepath.Clean(name)
+	if strings.Contains(name, "..") || filepath.IsAbs(name) {
+		return "", fmt.Errorf("Invalid file: %s")
+	}
+
+	if !strings.HasSuffix(name, ".zup") {
+		name += ".zup"
+	}
+
+	filePath := filepath.Join(ZUP_DIR, name)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return "", fmt.Errorf("failed to create zup file: %v", err)
+	}
+	defer file.Close()
 
 	key, err := GenerateKey(KEY_SIZE)
 	if err != nil {
@@ -25,25 +41,30 @@ func InitZup(name string) (string, error) {
 	}
 
 	readableKey := hex.EncodeToString(key)
-
 	return readableKey, nil
 }
 
-func OpenZup(fileName string, key string) (Zup, error) {
+func OpenZup(fileName string, key string) (*Zup, error) {
 	file, err := os.ReadFile(fileName)
 	if err != nil {
-		return Zup{}, err
+		return &Zup{}, err
 	}
 
 	encryptedContent := string(file)
-	content, err := decrypt(encryptedContent, []byte(key))
+
+	keyBytes, err := hex.DecodeString(key)
 	if err != nil {
-		return Zup{}, err
+		return &Zup{}, err
+	}
+
+	content, err := decrypt(encryptedContent, &keyBytes)
+	if err != nil {
+		return &Zup{}, err
 	}
 
 	zupData, err := ParseZupString(content)
 	if err != nil {
-		return Zup{}, err
+		return &Zup{}, err
 	}
 
 	return zupData, nil
@@ -64,7 +85,9 @@ func WriteZup(fileName string, zup Zup, key string) error {
 		return err
 	}
 
-	encryptedContent, err := encrypt(string(zupBytes), []byte(key))
+	keyBytes := []byte(hex.EncodeToString())
+
+	encryptedContent, err := encrypt(string(zupBytes), &keyBytes)
 	if err != nil {
 		return err
 	}
