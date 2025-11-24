@@ -59,7 +59,7 @@ func main() {
 			return
 		}
 
-		fmt.Printf("Generated key: %s", key)
+		fmt.Println("Generated key:", key)
 	case "-s":
 		// unfinished
 	case "-p":

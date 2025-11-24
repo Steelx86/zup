@@ -30,7 +30,7 @@ func GenerateKey(size int) ([]byte, error) {
 	return key, nil
 }
 
-func encrypt(content string, key *[]byte) (string, error) {
+func Encrypt(content string, key *[]byte) (string, error) {
 	zupData := []byte(content)
 
 	block, err := aes.NewCipher(*key)
@@ -54,7 +54,7 @@ func encrypt(content string, key *[]byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
-func decrypt(encryptedText string, key *[]byte) (string, error) {
+func Decrypt(encryptedText string, key *[]byte) (string, error) {
 	ciphertext, err := base64.StdEncoding.DecodeString(encryptedText)
 	if err != nil {
 		return "", fmt.Errorf("failed to decode: %v", err)

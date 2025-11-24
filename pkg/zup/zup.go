@@ -57,7 +57,7 @@ func OpenZup(fileName string, key string) (*Zup, error) {
 		return &Zup{}, err
 	}
 
-	content, err := decrypt(encryptedContent, &keyBytes)
+	content, err := Decrypt(encryptedContent, &keyBytes)
 	if err != nil {
 		return &Zup{}, err
 	}
@@ -85,9 +85,12 @@ func WriteZup(fileName string, zup Zup, key string) error {
 		return err
 	}
 
-	keyBytes := []byte(hex.EncodeToString())
+	keyBytes, err := hex.DecodeString(key)
+	if err != nil {
+		return err
+	}
 
-	encryptedContent, err := encrypt(string(zupBytes), &keyBytes)
+	encryptedContent, err := Encrypt(string(zupBytes), &keyBytes)
 	if err != nil {
 		return err
 	}
