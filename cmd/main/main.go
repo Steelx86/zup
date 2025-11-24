@@ -11,29 +11,30 @@ const (
 	helpMsg = `Zup 0.1 Alpha edition 2025
 zup [-OPTION] <param?>
 Options:
-  -n <name>     Initilize a .zup file
-  -r <key>      Read zup file
-  -d            Declare data format
-  -w <text>     Writes a new entry
-  -g            Generates a hash key
-  -s            Host a zupfile
-  -p <pull>     Pull the zupfile from host
-  -h            Displays a help message
+  -n <name>        Initilize a .zup file
+  -r <name> <key>  Read zup file
+  -d               Declare data format
+  -w <text>        Writes a new entry
+  -g               Generates a hash key
+  -s               Host a zupfile
+  -p <pull>        Pull the zupfile from host
+  -h               Displays a help message
 `
 )
 
 func main() {
+	commands := os.Args
+
 	if len(os.Args) < 2 {
 		fmt.Print(helpMsg)
 		return
 	}
 
-	commands := os.Args
 
 	switch commands[1] {
 	case "-n":
-		if len(os.Args) < 3 {
-			fmt.Print("Please provide a name for the zup file.\n")
+		if len(commands) < 3 {
+			fmt.Println("Please provide a name for the zup file.\nEX: zup zupfile.zup")
 			return
 		}
 
@@ -47,9 +48,22 @@ func main() {
 
 		fmt.Printf("Initialized zup file. Key: %s\n", key)
 	case "-r":
-		// unfinished
+		if len(commands) < 4 {
+			fmt.Println("Please provide a name and a key\nEX: zup zupfile.zup <KEY>")
+			return
+		}
+
+		name := commands[2]
+		key := commands[3]
+
+		zupData, err := zup.OpenZup(name, key)
+		if err != nil {
+			fmt.Printf("Zupfile failed to open: %v", err)
+		}
+
+		fmt.Println(zupData.String())
 	case "-d":
-		// unfinished
+		
 	case "-w":
 		// unfinished
 	case "-g":
